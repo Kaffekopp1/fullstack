@@ -11,20 +11,20 @@ const client = new Client({
   connectionString: process.env.PGURI
 });
 
-app.get('/api/cities', async (_request, response) => {
-  const { rows } = await client.query('SELECT * FROM cities WHERE name = $1', [
-    'Stockholm'
-  ]);
-
-  response.send(rows);
-});
-
 client.connect();
 
 const app = express();
 app.use(cors());
+
 app.get('/api', (_request, response) => {
   response.send({ hello: 'World' });
+});
+
+app.get('/api/cities', async (_request, response) => {
+  console.log('get');
+  const { rows } = await client.query('SELECT * FROM cities');
+
+  response.send(rows);
 });
 
 app.use(express.static(path.join(path.resolve(), 'dist')));
